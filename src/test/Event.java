@@ -4,6 +4,7 @@
 package test;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.idch.util.PersistenceUtil;
 
 
@@ -59,6 +62,7 @@ public class Event {
         this.date = d;
     }
     
+    @SuppressWarnings({"unchecked"})
     public static void main(String [] args) {
         EntityManagerFactory emf = PersistenceUtil.getEMFactory("org.idch.afed");
         
@@ -71,16 +75,43 @@ public class Event {
         try {
             e = new Event();
             e.date = new Date();
-            e.title = title + e.date.getTime();
+            title = title + e.date.getTime();
+            e.title = title;
             em.persist(e);
             
             tx.commit();
         } finally {
             if (tx.isActive())
                 tx.rollback();
-            em.close();
         }
-        
+
+
+        // try to list the events
+        tx = em.getTransaction();
+        tx.begin();
+        Session session = (Session) em.getDelegate();
+        try {
+            List<Event> events = (List<Event>)session.createCriteria(Event.class)
+                .list();
+
+            if ((events != null) && events.size() > 0) {
+                System.out.println("Number of Events: " + events.size());
+                for (Event event : events) {
+                    System.out.println(event.getId() + ": " + event.getTitle());
+                }
+            } else { 
+                System.out.println("No Events Found");
+            }
+
+            tx.commit();
+        } finally {
+            if (tx.isActive())
+                tx.rollback();
+        }
+
+        em.close();
+
+
         System.out.println("done.");
         // return (e != null) ? e : new ArrayList<Event>();
     }
