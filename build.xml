@@ -27,21 +27,24 @@
   <!-- Import the basic default project -->
   <property name="build.properties" value="${basedir}/build.properties"/>
   <property name="includeantruntime" value="false"/>
-    
-  <property name="hsqldb.datadir" value="../data/db"/>
-  <property name="hsqldb.datafile" value="${hsqldb.datadir}/afed"/>
-  <property name="hsqldb.servername" value="afed"/>
-  <property name="hsqldb.username" value="sa"/>
-  <property name="hsqldb.password" value=""/>
-    
+   
   <!-- Import the basic default project -->
   <import file="${basedir}/../build-tools/basic.xml"/>
   <import file="${basedir}/../build-tools/dbutils.xml"/>
   <import file="${basedir}/../build-tools/hibernate.xml"/>
   
+  <!-- Classpath used to compile unit tests -->
+  <path id="run.path">
+    <path refid="lib.classpath" />
+    <pathelement location="${build.dir}/${ant.project.name}.jar" />
+  </path>
+ 
   <target name="compile" depends="copy-metafiles, basic.compile" 
           description="--> Compile this project"/>
 
-  <target name="run" depends="compile">
+  <target name="run" depends="package">
+    <java classname="test.Event" classpathref="run.path" fork="true">
+    </java>
+ 
   </target>
 </project>

@@ -37,7 +37,7 @@
     <dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1"
                 conf="compile->default;runtime->default"/>
                 
-    <dependency org="hsqldb" name="hsqldb" rev="1.8.0.7"
+    <dependency org="org.hsqldb" name="hsqldb" rev="2.2.8"
                 conf="compile->default;runtime->default"/>
     <dependency org="org.hibernate" name="hibernate-core" rev="4.1.1.Final"
                 conf="compile->default;runtime->default"/>
