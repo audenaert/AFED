@@ -1,0 +1,9 @@
+This directory should be used to store servlet (and other web-based) 
+configuration details. It should include the WEB-INF/ and META-INF/ 
+directories needed to create a .war file. Note that the contents of 
+these directories may be combined with other directories (e.g., 
+/etc/jpa/META-INF) as needed to incorporate other resources. 
+
+TODO We need to find a better mechanism for supporting different configurations
+     that may require different sets of resources (e.g., the META-INF directory
+     for a .war file as opposted to a .jar file).

@@ -1,8 +1,7 @@
 .settings
-
 .project
-
 .classpath
-
 lib/
 /build.properties
+/build
+/etc/log4j.properties
