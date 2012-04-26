@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ========================================================================= ==>
+<!== example.ivy.xml
+<!==  
+<!== Created by Neal Audenaert <neal@idch.org>
+<!== 
+<!== This is an example ivy.xml file intended to be used as a template for 
+<!== specifying project dependencies. 
+<!== ========================================================================= -->
+<ivy-module version="1.0">
+  <info organisation="org.idch" module="afed"/>
+  
+  <!-- Define dependency configurations for different tasks and distribution
+       methods (e.g. testing, creating a .jar or .war distributables. 
+   -->
+  <configurations defaultconfmapping="default">
+    <conf name="compile" visibility="private"/>
+    <conf name="test" extends="compile" visibility="private"/>
+    <conf name="master" />
+    <conf name="runtime" extends="compile"/>
+    <conf name="default" extends="master, runtime"/>
+  </configurations>
+  
+  <publications>
+    <artifact conf="master"/>
+  </publications>
+  
+  <dependencies>
+   
+    <dependency org="org.idch" name="idch-utils" rev="latest.integration"
+                conf="compile->default;runtime->default"/>  
+    <dependency org="org.apache" name="log4j" rev="1.2.14"
+                conf="compile->default;runtime->default"/>                
+    <dependency org="org.apache.commons" name="commons-lang" rev="2.1"
+                conf="compile->default;runtime->default"/>
+    <dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1"
+                conf="compile->default;runtime->default"/>
+                
+     <dependency org="hsqldb" name="hsqldb" rev="1.8.0.7"/>
+    <dependency org="org.hibernate" name="hibernate-core" rev="4.1.1.Final" conf="default"/>
+    <dependency org="org.hibernate" name="hibernate-entitymanager" rev="4.1.1.Final" conf="default"/>
+    <dependency org="org.hibernate" name="hibernate-c3p0" rev="4.1.1.Final" conf="default"/>
+                
+    <dependency org="junit" name="junit" rev="4.5"
+                conf="test->default;"/>  
+
+  </dependencies>
+</ivy-module>
