@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.idch.afed.Collation;
+import org.idch.afed.CollationDelegate;
 import org.idch.afed.Image;
 
 /**
  * @author Neal Audenaert
  */
-public class JPACollationDelegate implements Collation {
+public class JPACollationDelegate implements CollationDelegate {
 
     /* (non-Javadoc)
      * @see java.util.List#size()

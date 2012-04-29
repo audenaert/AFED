@@ -50,7 +50,7 @@ public class JPAFacsimileDelegate extends PersistentObject implements FacsimileD
     
     private DublinCore dc = null;
     
-    private Set<JPACollationDelegate> collations = new HashSet<JPACollationDelegate>();
+    private Set<Collation> collations = new HashSet<Collation>();
     
 //    @SuppressWarnings("unused")
 //    private Map<String, Designation> designations = new HashMap<String, Designation>();
