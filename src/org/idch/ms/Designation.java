@@ -3,11 +3,11 @@
  */
 package org.idch.ms;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Represents a designated identifier for this manuscript according to some specified 
@@ -16,14 +16,10 @@ package org.idch.ms;
  * 
  * @author Neal Audenaert
  */
-//@Entity
-//@Table(name="MS_DESIGNATION")
+@Entity
+@Table(name="MS_DESIGNATIONS")
 public class Designation {
-	
-    /**
-     * The persistent id of this designation. 
-     * 
-     */
+    /** The persistent id of this designation. */
     private Long pId;
     
 	/** The identifier used for a manuscript in a given scheme. For example,
@@ -38,11 +34,13 @@ public class Designation {
 	// CONSTRUCTORS
 	//======================================================================================
 	
-	Designation() {
+	/** Default constructor required for JPA. */
+	protected Designation() {
 	    
 	}
 	
 	/**
+	 * Constructs a new designation with the specified scheme and identifier.
 	 * 
 	 * @param scheme
 	 * @param id
@@ -53,62 +51,32 @@ public class Designation {
 	}
 	
 	//======================================================================================
-    // ACCESSORS & MUTATORS
+    // ACCESSORS 
     //====================================================================================== 
 
-	/**
-	 * 
-	 * @return
-	 */
-//	@Id
-//	@Column(name="id")
-//    @GeneratedValue
-	Long getPersistentId() {
-	    return pId;
-	}
-	
-	/**
-	 * 
-	 * @param id
-	 */
-	void setPersistentId(Long id) {
-	    this.pId = id;
-	}
-	
-	
 	/** Returns a short identifier for the naming scheme of this identifier, for example, 
-	 * <tt>GA</tt> for Gregory Alland numbers.
-	 * 
-	 * @return The naming scheme for this designation.
-	 */
-//	@Column(name="scheme")
+	 * <tt>GA</tt> for Gregory Alland numbers. */
 	public String getScheme() {
 		return scheme;
 	}
-	
-	void setScheme(String value) {
-	    this.scheme = value;
-	}
-	
-	/**
-	 * The identifier for this designation.
-	 * 
-	 * @return The identifier for this designation.
-	 */
-//	@Column(name="designatedId")
+
+	/** The identifier for this designation. */
 	public String getId() {
 		return id;
 	}
 	
-	/**
-	 * Sets the ID of the 
-	 * @param id
-	 */
-	void setId(String id) {
-	    this.id = id;
-	}
+	//======================================================================================
+    // ACCESSORS & MUTATORS REQUIRED FOR PERSISTENCE 
+    //======================================================================================
 	
+	@Id @Column(name="uid") @GeneratedValue
+    Long getPersistentId() { return pId; }
 	
+	void setPersistentId(Long id) { this.pId = id; }
+    
+    void setScheme(String value) { this.scheme = value; }
+    
+    void setId(String id) { this.id = id; }
 	//======================================================================================
     // EQUALITY METHOS
     //====================================================================================== 
