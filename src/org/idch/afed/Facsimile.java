@@ -23,12 +23,11 @@ public class Facsimile {
      *  configuration information. For more information on how to configure
      *  the <code>DelegateFactory</code>, @see {@link org.isch.afed.DelegateFactory}.
      */
-    private FacsimileDelegate delegate;
+    private final FacsimileDelegate delegate;
     
     //=========================================================================
     // CONSTRUCTORS
     //=========================================================================
-    
     
     public Facsimile() {
         this.delegate = DelegateFactory.getFacsimileDelegate();
@@ -42,6 +41,10 @@ public class Facsimile {
         this.delegate = delegate;
     }
 
+    FacsimileDelegate getDelegate() {
+        return this.delegate;
+    }
+    
     //=========================================================================
     // FACSIMILE DESIGNATIONS
     //=========================================================================
