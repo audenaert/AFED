@@ -8,30 +8,147 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.idch.afed.CollationDelegate;
+import org.idch.afed.FacsimileDelegate;
+import org.idch.afed.FacsimileRepository;
 import org.idch.afed.Image;
+import org.idch.util.Field;
+import org.idch.util.PersistentObject;
 
 /**
  * @author Neal Audenaert
  */
-public class JPACollationDelegate implements CollationDelegate {
+@Entity
+@Table(name="COLLATIONS")
+public class JPACollationDelegate  extends PersistentObject<JPAFacsimileDelegate> implements CollationDelegate {
+    /** The repository to be used to update this collation and to create 
+     *  new resources (images, features, etc.). */
+    private transient JPAFacsimileRepository repo;
+    
+    private Long id = null;
+    
+    private List<Image> images;
+    private Field<String> name = fields.create((String)null);
+    private Field<String> description = fields.create((String)null);
+    
+    private JPAFacsimileDelegate facsimile;
+    
+    //=========================================================================
+    // CONSTRUCTORS
+    //=========================================================================
+    
+    /** No-arg constructor as required by JPA. */
+    JPACollationDelegate() {
+        
+    }
+    
+    public JPACollationDelegate(FacsimileDelegate facsimile) {
+        
+    }
+    
+    public JPACollationDelegate(FacsimileDelegate facsimile, String name, String desc) {
+        
+    }
+    
+    void initRepository(FacsimileRepository repo) {
+        // FIXME do we need a repo, or just an EMF? 
+        // FIXME How do we initialize this when retrieving objects from JPA
+        if (this.repo != null) {
+            if ((null != repo) && (this.repo != repo)) {
+                // TODO REPORT ERROR
+            }
+            
+            return;
+        }
+        
+        if (null == repo) {
+            repo = FacsimileRepository.getInstance();
+        } else if (repo instanceof JPAFacsimileRepository) {
+            this.repo = (JPAFacsimileRepository)repo;
+            super.setEntityManagerFactory(this.repo.getEmf());
+        } else {
+            this.repo = null;
+            // TODO throw exception
+        }
+    }
+    
+    @Id @GeneratedValue 
+    Long getJPAId() {
+        return this.id;
+    }
+    
+    /** Called by the JPA framework to inject the id. */
+    @SuppressWarnings("unused")
+    private void setJPAId (Long id) {
+        this.id = id;
+    }
+
+    @ManyToOne
+    JPAFacsimileDelegate getFacsimile() {
+        return facsimile;
+    }
+    
+    void setFacsimile(JPAFacsimileDelegate facsimile) {
+        this.facsimile = facsimile;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.idch.afed.Collation#getName()
+     */
+    @Override
+    public String getName() {
+        return name.value();
+    }
+
+    /* (non-Javadoc)
+     * @see org.idch.afed.Collation#setName(java.lang.String)
+     */
+    @Override
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    /* (non-Javadoc)
+     * @see org.idch.afed.Collation#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        return this.description.value();
+    }
+
+    /* (non-Javadoc)
+     * @see org.idch.afed.Collation#setDescription(java.lang.String)
+     */
+    @Override
+    public void setDescription(String desc) {
+        this.description.set(desc);
+    }
+
+    //=========================================================================
+    // LIST PASS THROUGH METHODS
+    //=========================================================================
 
     /* (non-Javadoc)
      * @see java.util.List#size()
      */
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        return 0;
+        return images.size();
     }
 
     /* (non-Javadoc)
      * @see java.util.List#isEmpty()
      */
-    @Override
+    @Override @Transient
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        return false;
+        return images.isEmpty();
     }
 
     /* (non-Javadoc)
@@ -39,8 +156,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean contains(Object o) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.contains(o);
     }
 
     /* (non-Javadoc)
@@ -48,8 +164,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public Iterator<Image> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return images.iterator();
     }
 
     /* (non-Javadoc)
@@ -57,8 +172,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public Object[] toArray() {
-        // TODO Auto-generated method stub
-        return null;
+        return images.toArray();
     }
 
     /* (non-Javadoc)
@@ -66,8 +180,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public <T> T[] toArray(T[] a) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.toArray(a);
     }
 
     /* (non-Javadoc)
@@ -75,8 +188,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean add(Image e) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.add(e);
     }
 
     /* (non-Javadoc)
@@ -84,8 +196,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean remove(Object o) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.remove(o);
     }
 
     /* (non-Javadoc)
@@ -93,8 +204,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean containsAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.containsAll(c);
     }
 
     /* (non-Javadoc)
@@ -102,8 +212,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean addAll(Collection<? extends Image> c) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.addAll(c);
     }
 
     /* (non-Javadoc)
@@ -111,8 +220,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean addAll(int index, Collection<? extends Image> c) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.addAll(index, c);
     }
 
     /* (non-Javadoc)
@@ -120,8 +228,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean removeAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.removeAll(c);
     }
 
     /* (non-Javadoc)
@@ -129,8 +236,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public boolean retainAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        return false;
+        return images.retainAll(c);
     }
 
     /* (non-Javadoc)
@@ -138,7 +244,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
+        images.clear();
 
     }
 
@@ -147,8 +253,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public Image get(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.get(index);
     }
 
     /* (non-Javadoc)
@@ -156,8 +261,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public Image set(int index, Image element) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.set(index, element);
     }
 
     /* (non-Javadoc)
@@ -165,7 +269,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public void add(int index, Image element) {
-        // TODO Auto-generated method stub
+        images.add(index, element);
 
     }
 
@@ -174,8 +278,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public Image remove(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.remove(index);
     }
 
     /* (non-Javadoc)
@@ -183,8 +286,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public int indexOf(Object o) {
-        // TODO Auto-generated method stub
-        return 0;
+        return images.indexOf(o);
     }
 
     /* (non-Javadoc)
@@ -192,8 +294,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public int lastIndexOf(Object o) {
-        // TODO Auto-generated method stub
-        return 0;
+        return images.lastIndexOf(o);
     }
 
     /* (non-Javadoc)
@@ -201,8 +302,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public ListIterator<Image> listIterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return images.listIterator();
     }
 
     /* (non-Javadoc)
@@ -210,8 +310,7 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public ListIterator<Image> listIterator(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.listIterator(index);
     }
 
     /* (non-Javadoc)
@@ -219,44 +318,8 @@ public class JPACollationDelegate implements CollationDelegate {
      */
     @Override
     public List<Image> subList(int fromIndex, int toIndex) {
-        // TODO Auto-generated method stub
-        return null;
+        return images.subList(fromIndex, toIndex);
     }
 
-    /* (non-Javadoc)
-     * @see org.idch.afed.Collation#getName()
-     */
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.idch.afed.Collation#setName(java.lang.String)
-     */
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.idch.afed.Collation#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.idch.afed.Collation#setDescription(java.lang.String)
-     */
-    @Override
-    public void setDescription(String desc) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

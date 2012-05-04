@@ -3,6 +3,7 @@
  */
 package org.idch.afed;
 
+import org.idch.afed.impl.jpa.JPACollationDelegate;
 import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
 
 /**
@@ -20,4 +21,11 @@ class DelegateFactory {
         return new JPAFacsimileDelegate(name, desc, date);
     }
 
+    public static CollationDelegate getCollationDelegate(Facsimile f) {
+        return new JPACollationDelegate(f.getDelegate());
+    }
+    
+    public static CollationDelegate getCollationDelegate(Facsimile f, String name, String desc) {
+        return new JPACollationDelegate(f.getDelegate(), name, desc);
+    }
 }
