@@ -19,8 +19,12 @@ public class FieldManager {
         return f;
     }
     
-    public <T> HashSet<T> createSet(Set<T> value) {
-        return null;
+    public <T> SetField<T> create(Set<T> value) {
+        return new SetField<T>(value);
+    }
+    
+    public <T> ListField<T> create(List<T> value) {
+        return new ListField<T>(value);
     }
     
     public boolean changed() {

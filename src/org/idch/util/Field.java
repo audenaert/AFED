@@ -20,6 +20,11 @@ public class Field<T> {
         return currentValue;
     }
     
+    /** Returns the stored original value for this field. */
+    public T original() {
+        return originalValue;
+    }
+    
     /** Sets the current value of this field. */
     public void set(T value) {
         this.currentValue = value;
