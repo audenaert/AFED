@@ -10,10 +10,12 @@ import java.util.Map;
 /**
  * @author Neal Audenaert
  */
-public interface Annotation {
+public interface Feature {
     // TODO support non-contiguous annotations
     //      support transcriptions
     //      support cross references
+    //      support page references (anchor to simple shapes on the page)
+    //      read van der Somple paper and figure out what is applicable.
     
     /**
      * Returns 
@@ -42,9 +44,9 @@ public interface Annotation {
     
     public void setProperty(String prop, String name);
     
-    public Annotation getParent();
+    public Feature getParent();
     
-    public List<Annotation> getChildren();
+    public List<Feature> getChildren();
     
     /** 
      * Returns an iterator that operates over all of the images denoted by this annotation.
