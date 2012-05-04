@@ -14,7 +14,10 @@ import org.idch.util.persist.RepositoryAccessException;
 /**
  * @author Neal Audenaert
  */
-public class PersistentObject implements Attachable {
+public class PersistentObject<T> implements Attachable {
+    
+    protected final FieldManager fields = new FieldManager();
+    
     private EntityManagerFactory emf;
     private EntityTransaction tx;
     private transient EntityManager em = null;
@@ -28,17 +31,17 @@ public class PersistentObject implements Attachable {
     }
     
     protected void setEntityManagerFactory(EntityManagerFactory emf) {
-        if (this.isAttached()) {
-            throw new RepositoryAccessException(
-                    "Cannot update the EMF of an attached object.");
-        }
-        
+//        if (this.isAttached()) {
+//            throw new RepositoryAccessException(
+//                    "Cannot update the EMF of an attached object.");
+//        }
+//        
         this.emf = emf;
     }
     
     @Transient
     protected FieldManager getFields() {
-        return new FieldManager();
+        return fields;
     }
     
     @Transient
@@ -48,18 +51,32 @@ public class PersistentObject implements Attachable {
     
     @Transient
     public boolean isAttached() {
-        return (this.em != null) && this.em.isOpen();
+        return false;
+//        return (this.em != null) && this.em.isOpen();
     }
     
+    /**
+     * Makes this persistent object updatable if it is not already. Persistent objects may
+     * be disconnected from their data store 
+     * 
+     * @throws RepositoryAccessException
+     */
     protected void makeUpdatable() throws RepositoryAccessException {
-        if (isUpdatable()) return; // we already have an active transaction to use 
-        
-        if (!this.isAttached()) {
-            this.attach();
-        }
-        
-        this.tx = this.em.getTransaction();
-        this.tx.begin();
+//        if (isUpdatable()) return; // we already have an active transaction to use 
+//        
+//        if (!this.isAttached()) {
+//            this.attach();
+//        }
+//        
+//        this.tx = this.em.getTransaction();
+//        if (!this.tx.isActive()) {
+//            this.tx.begin();
+//        } else {
+//            // otherwise we're joining an existing transaction 
+//            
+//            // FIXME this will commit the other resources when this transaction is saved
+//            //       which is probably not what we want
+//        }
     }
     
     
@@ -79,35 +96,61 @@ public class PersistentObject implements Attachable {
         //       across updates to multiple objects. We need to provide support for
         //       this scenario at some point.
         
-        boolean success = false;
-        if (!this.isUpdatable()) {
-            this.makeUpdatable();
-        }
+        EntityManager em = emf.createEntityManager();
+        Session sess = (Session)em.getDelegate();
         
-        try {
-            this.tx.commit();
-            this.getFields().flush();
-            success = true;
-        } catch (Throwable t) {
-            if (tx.isActive()) {
-                try { tx.rollback(); } 
-                catch (Throwable err) { }
-            }
-
-            // TODO handle and repackage exception
-
-        } finally {
-            tx = null;
-        }
+        sess.getTransaction().begin();
+        sess.saveOrUpdate(this);
+        sess.flush();
+        sess.getTransaction().commit();
+        em.close();
         
-        return success;
+        return true;
+        
+//        boolean success = false;
+//        if (!this.isUpdatable()) {
+//            this.makeUpdatable();
+//        }
+//        
+//        try {
+//            this.tx.commit();
+//            this.getFields().flush();
+//            success = true;
+//        } catch (Throwable t) {
+//            if (tx.isActive()) {
+//                try { tx.rollback(); } 
+//                catch (Throwable err) { }
+//            }
+//
+//            // TODO handle and repackage exception
+//
+//        } finally {
+//            tx = null;
+//        }
+        
+//        return success;
+    }
+    
+    public Object save(Object obj) throws RepositoryAccessException {
+        EntityManager em = emf.createEntityManager();
+        Session sess = (Session)em.getDelegate();
+        
+        sess.getTransaction().begin();
+        sess.saveOrUpdate(obj);
+        sess.flush();
+        sess.getTransaction().commit();
+        em.close();
+        
+        return obj;
     }
 
     public void revert() throws RepositoryAccessException {
         
     }
     
-   
+    public boolean remove() {
+        return false;
+    }
     
     /**
      * Attaches this object to the persistent data store. Note that this will save any 
@@ -118,27 +161,27 @@ public class PersistentObject implements Attachable {
      */
     @Override
     public void attach() throws RepositoryAccessException {
-        this.attach(null);
+//        this.attach(null);
     }
     
     @Override
     public void attach(EntityManager em) throws RepositoryAccessException {
-        // If an EM was supplied, make sure that we aren't attached to a different EM 
-        if ((null != em)  && this.isAttached()) {
-            if (this.em != em) {
-                throw new RepositoryAccessException("Cannot attach this object to the " +
-                        "provided EntityManager: already attached to a different " +
-                        "EntityManager.");
-            } 
-        }
-        
-        if (!this.isAttached()) {
-            // NOTE this ties us to Hibernate instead of JPA more generally
-            this.em = (em != null) ? em : this.emf.createEntityManager();
-            
-            Session session = (Session)this.em.getDelegate();
-            session.saveOrUpdate(this);
-        }
+//        // If an EM was supplied, make sure that we aren't attached to a different EM 
+//        if ((null != em)  && this.isAttached()) {
+//            if (this.em != em) {
+//                throw new RepositoryAccessException("Cannot attach this object to the " +
+//                        "provided EntityManager: already attached to a different " +
+//                        "EntityManager.");
+//            } 
+//        }
+//        
+//        if (!this.isAttached()) {
+//            // NOTE this ties us to Hibernate instead of JPA more generally
+//            this.em = (em != null) ? em : this.emf.createEntityManager();
+//          
+//            Session session = (Session)this.em.getDelegate(); 
+//            session.saveOrUpdate(this);
+//        }
     }
 
     /* (non-Javadoc)
@@ -146,8 +189,8 @@ public class PersistentObject implements Attachable {
      */
     @Override
     public void detach() throws RepositoryAccessException {
-        this.em.close();
-        this.em = null;
+//        this.em.close();
+//        this.em = null;
     }
 
 }
