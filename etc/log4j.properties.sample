@@ -16,16 +16,34 @@
 ## LOGGERS
 
 log4j.logger.org.idch=WARN, IDCHAppender, console
+log4j.logger.org.jboss=WARN, JBossAppender, console
+log4j.logger.org.hibernate=WARN, HibernateAppender, console
 
 ## APPENDERS
 
 # IDCHAppender - Main 'catchall' appender for IDCH logging 
 log4j.appender.IDCHAppender=org.apache.log4j.RollingFileAppender
-log4j.appender.IDCHAppender.File=/path/to/logs/idch.log
+log4j.appender.IDCHAppender.File=/path/toidch.log
 log4j.appender.IDCHAppender.MaxFileSize=10MB
 log4j.appender.IDCHAppender.MaxBackupIndex=10
 log4j.appender.IDCHAppender.layout=org.apache.log4j.PatternLayout
 log4j.appender.IDCHAppender.layout.ConversionPattern=%d %-5p [%t] %-20c - %m\r\n
+
+# JBossAppender - Main 'catchall' appender for JBoss logging 
+log4j.appender.JBossAppender=org.apache.log4j.RollingFileAppender
+log4j.appender.JBossAppender.File=/path/tojboss.log
+log4j.appender.JBossAppender.MaxFileSize=10MB
+log4j.appender.JBossAppender.MaxBackupIndex=10
+log4j.appender.JBossAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.JBossAppender.layout.ConversionPattern=%d %-5p [%t] %-20c - %m\r\n
+
+# HibernateAppender - Main 'catchall' appender for Hibernate logging 
+log4j.appender.HibernateAppender=org.apache.log4j.RollingFileAppender
+log4j.appender.HibernateAppender.File=/path/tohibernate.log
+log4j.appender.HibernateAppender.MaxFileSize=10MB
+log4j.appender.HibernateAppender.MaxBackupIndex=10
+log4j.appender.HibernateAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.HibernateAppender.layout.ConversionPattern=%d %-5p [%t] %-20c - %m\r\n
 
 # console
 log4j.appender.console=org.apache.log4j.ConsoleAppender
