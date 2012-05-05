@@ -19,8 +19,8 @@ public class PersistentObject<T> implements Attachable {
     protected final FieldManager fields = new FieldManager();
     
     private EntityManagerFactory emf;
-    private EntityTransaction tx;
-    private transient EntityManager em = null;
+//    private EntityTransaction tx;
+//    private transient EntityManager em = null;
     
     protected PersistentObject() {
         
@@ -44,10 +44,10 @@ public class PersistentObject<T> implements Attachable {
         return fields;
     }
     
-    @Transient
-    private boolean isUpdatable() {
-        return null != tx && tx.isActive();
-    }
+//    @Transient
+//    private boolean isUpdatable() {
+//        return null != tx && tx.isActive();
+//    }
     
     @Transient
     public boolean isAttached() {
