@@ -127,4 +127,20 @@ public class ImageContext implements ImageStore {
                 "Use the underlying ImageStore instance directly.");
     }
 
+    /**
+     * @see org.idch.afed.images.ImageStore#isConnected()
+     */
+    @Override
+    public boolean isConnected() {
+        return this.delegate.isConnected();
+    }
+
+    /**
+     * @see org.idch.afed.images.ImageStore#isClosed()
+     */
+    @Override
+    public boolean isClosed() {
+        return this.delegate.isClosed();
+    }
+
 }

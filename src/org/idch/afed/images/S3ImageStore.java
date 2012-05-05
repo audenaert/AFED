@@ -67,6 +67,24 @@ public class S3ImageStore implements ImageStore {
         
     }
 
+    /* (non-Javadoc)
+     * @see org.idch.afed.images.ImageStore#isConnected()
+     */
+    @Override
+    public boolean isConnected() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.idch.afed.images.ImageStore#isClosed()
+     */
+    @Override
+    public boolean isClosed() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     
 
 }
