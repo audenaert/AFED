@@ -28,7 +28,7 @@ public class FSImageStoreTests extends TestCase {
             outputDir.mkdirs();
         }
         
-        store = new FSImageStore(outputDir.getPath());
+        store = FSImageStore.createImageStore(outputDir.getPath());
         store.connect();
     }
     

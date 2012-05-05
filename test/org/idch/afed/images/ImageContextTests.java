@@ -29,7 +29,7 @@ public class ImageContextTests extends TestCase {
             OUTPUT_DIR.mkdirs();
         }
         
-        store = new FSImageStore(OUTPUT_DIR.getPath());
+        store = FSImageStore.createImageStore(OUTPUT_DIR.getPath());
         context = new ImageContext(store, CTX);
         store.connect();
     }
