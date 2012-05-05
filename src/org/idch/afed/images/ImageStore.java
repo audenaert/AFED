@@ -11,9 +11,6 @@ import java.io.IOException;
  */
 public interface ImageStore {
     
-    public void connect();
-    
-    public void close();
     
     public void store(String relPath, BufferedImage image) throws IOException;
     
@@ -23,4 +20,11 @@ public interface ImageStore {
     
     public BufferedImage get(String relPath) throws IOException;
         
+    public void connect() throws IOException;
+    
+    public boolean isConnected();
+    
+    public void close();
+    
+    public boolean isClosed();
 }
