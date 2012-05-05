@@ -5,6 +5,7 @@ package org.idch.afed;
 
 import org.idch.afed.impl.jpa.JPACollationDelegate;
 import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
+import org.idch.afed.impl.jpa.JPAImageDelegate;
 
 /**
  * @author Neal Audenaert
@@ -27,5 +28,9 @@ class DelegateFactory {
     
     public static CollationDelegate getCollationDelegate(Facsimile f, String name, String desc) {
         return new JPACollationDelegate(f.getDelegate(), name, desc);
+    }
+    
+    public static ImageDelegate getImageDelegate(Facsimile f, String ctx) {
+        return new JPAImageDelegate(f.getDelegate(), ctx);
     }
 }
