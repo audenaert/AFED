@@ -17,40 +17,58 @@ import org.idch.util.Filenames;
  */
 public class FSImageStore implements ImageStore {
     private static final Logger LOGGER = Logger.getLogger(ImageStore.class);
-    
+    // TODO create exceptions NotConnectedException, AlreadyConnectedException, ClosedException
+    //      move synchronization details to abstract super class.
+
     public static final String DEFAULT_FORMAT = "jpeg";
     
-    private final File baseDir;   
-    private final String basePath;
+    public static FSImageStore createImageStore(String path) throws IOException {
+        FSImageStore store = new FSImageStore();
+        store.setBaseDir(path);
+        
+        return store;
+    }
     
+    private File baseDir;   
+    private String basePath;
+    
+    private boolean connected = false;
     private boolean allowOverwrite = false;
     
-    public FSImageStore(String path) throws IOException {
-        this.baseDir = new File(path);
-        this.basePath = Filenames.getCanonicalPOSIXPath(this.baseDir);
+    private StateLock stateLock = new StateLock();
+    
+    //=========================================================================
+    // CONSTRUCTORS & CONFIGURATION METHODS
+    //=========================================================================
+    
+
+    /**
+     * 
+     */
+    FSImageStore() {
         
-        if (!this.baseDir.canWrite()) {
-            throw new IOException("The supplied base directory is not writable: " + this.basePath);
-        } else if (this.baseDir.exists() && !this.baseDir.isDirectory()) {
-            throw new IOException("The supplied base directory is not a directory: " + this.basePath);
-        }
-        
-        if (!this.baseDir.exists()) {
-            this.baseDir.mkdirs();
+    }
+    
+    public void setBaseDir(String path) throws IOException {
+        synchronized (stateLock) {
+            if (stateLock.isLocked()) {
+                throw new IOException("Cannot update path: Already connected to image store.");
+            }
+            
+            this.baseDir = new File(path);
+            this.basePath = Filenames.getCanonicalPOSIXPath(this.baseDir);
+
+            if (!this.baseDir.canWrite()) {
+                throw new IOException("The supplied base directory is not writable: " + this.basePath);
+            } else if (this.baseDir.exists() && !this.baseDir.isDirectory()) {
+                throw new IOException("The supplied base directory is not a directory: " + this.basePath);
+            }
         }
     }
     
-    /** Allow the image store to overwrite existing resources. By default,
-     *  overwriting existing resources is not allowed. */
-    public void allowOverwrite() {
-        allowOverwrite(true);
-    }
-    
-    /** Indicate whether the image store can overwrite existing resources. By
-     *  default, overwriting existing resources is not allowed.  */
-    public void allowOverwrite(boolean flag) {
-        allowOverwrite = flag;
-    }
+    //=========================================================================
+    // UTILITY METHODS
+    //=========================================================================
     
     /** 
      * Checks to see if the supplied file is a sub-directory of this image 
@@ -77,8 +95,8 @@ public class FSImageStore implements ImageStore {
         if (!isSubdirectory(file)) {
             String path = Filenames.getCanonicalPOSIXPath(file);
             throw new IOException("The supplied relative path points to a " +
-            		"location that is not a sub-directory of this image " +
-            		"store's root directory: " + path);
+                    "location that is not a sub-directory of this image " +
+                    "store's root directory: " + path);
         }
     }
     
@@ -103,6 +121,32 @@ public class FSImageStore implements ImageStore {
         }
     }
     
+    //=========================================================================
+    // ACCESSORS & MUTATORS
+    //=========================================================================
+    
+    /** Allow the image store to overwrite existing resources. By default,
+     *  overwriting existing resources is not allowed. */
+    public void allowOverwrite() {
+        allowOverwrite(true);
+    }
+    
+    /** Indicate whether the image store can overwrite existing resources. By
+     *  default, overwriting existing resources is not allowed.  */
+    public void allowOverwrite(boolean flag) {
+        allowOverwrite = flag;
+    }
+    
+    //=========================================================================
+    // DATA ACCESS METHOS
+    //=========================================================================
+    
+    private void checkConnection() {
+        if (!this.isConnected()) {
+            throw new RuntimeException("Not Connected");
+        }
+    }
+    
     /** 
      * @see org.idch.afed.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
      */
@@ -116,6 +160,8 @@ public class FSImageStore implements ImageStore {
      */
     @Override
     public void store(String relPath, BufferedImage image, String format) throws IOException {
+        checkConnection();
+        
         File file = new File(baseDir, relPath);
         
         // sanity checks
@@ -133,8 +179,9 @@ public class FSImageStore implements ImageStore {
      */
     @Override
     public boolean exists(String relPath) {
-        File file = new File(baseDir, relPath);
+        checkConnection();
         
+        File file = new File(baseDir, relPath);
         return isSubdirectory(file) && file.exists() && file.canRead();
     }
     
@@ -143,6 +190,8 @@ public class FSImageStore implements ImageStore {
      */
     @Override
     public BufferedImage get(String relPath) throws IOException {
+        checkConnection();
+        
         File file = new File(baseDir, relPath);
         
         if (!exists(relPath)) {
@@ -154,14 +203,62 @@ public class FSImageStore implements ImageStore {
         return ImageIO.read(file);
     }
     
+    //=========================================================================
+    // CONNECTION METHODS
+    //=========================================================================
+    
     @Override
-    public void connect() {
-        // no operations needed
+    public void connect() throws IOException {
+        synchronized (stateLock) {
+            if (this.connected || this.stateLock.isLocked()) {
+                throw new RuntimeException("Connection Failed: this image store is" +
+                		"either already connected or else it's state has been locked.");
+            }
+            
+            this.stateLock.lock();
+            try {
+                if (!this.baseDir.exists()) {
+                    this.baseDir.mkdirs();
+                }
+                
+                this.connected = true;
+            } catch (Throwable t) {
+                throw new IOException("Could not create parent directories."); 
+            }
+            
+        }
+    }
+    
+    @Override
+    public boolean isConnected() {
+        synchronized (stateLock) {
+            return this.connected;
+        }
     }
     
     @Override
     public void close() {
-        // no operations needed
+        synchronized (stateLock) {
+            this.connected = false;
+        }
+    }
+    
+    @Override
+    public boolean isClosed() {
+        synchronized (stateLock) {
+            return (stateLock.isLocked() && !this.connected);
+        }
     }
 
+    private class StateLock {
+        boolean locked = false;
+        
+        public void lock() {
+            locked = true;
+        }
+        
+        public boolean isLocked() {
+            return locked;
+        }
+    }
 }
