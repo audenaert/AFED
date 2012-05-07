@@ -3,16 +3,23 @@
  */
 package test;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.Session;
 import org.idch.afed.Facsimile;
 import org.idch.afed.FacsimileRepository;
+import org.idch.afed.images.FSImageStore;
+import org.idch.afed.images.ImageContext;
 import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
 import org.idch.ms.Designation;
+import org.idch.tzivi.FSTziCreator;
+import org.idch.tzivi.TziConfig;
 import org.idch.util.PersistenceUtil;
 import org.idch.util.persist.RepositoryAccessException;
 
@@ -135,8 +142,44 @@ public class SimpleTestDriver {
         }
     }
     
+    private static final String TEST_IMAGE = "data/testdata/images/GA0209/0001a.jpg";
+    private static final File OUTPUT_DIR = new File("data/testdata/temp/fsimagestore"); 
+    private static final String CTX =  "tiles/";
+
     public static void main(String [] args) {
-        apiTest();
+//        apiTest();
+//        for (String fmt : ImageIO.getReaderFormatNames()) {
+//            System.out.println(fmt);
+//            
+//        }
+        try {
+            File f = new File("I:\\DonneImages\\1633\\001-2.tif");
+            if (f.exists() && f.canRead()) {
+                System.out.println("Readable File Exists.");
+            }
+            
+            FSImageStore store = FSImageStore.getImageStore(OUTPUT_DIR.getPath());
+            ImageContext context = new ImageContext(store, CTX);
+            store.connect();
+            
+            TziConfig config = new TziConfig();
+            long start = System.currentTimeMillis();
+            BufferedImage image = ImageIO.read(f);
+            
+            FSTziCreator creator = new FSTziCreator(image, config, context);
+            creator.create();
+            long end = System.currentTimeMillis();
+            
+            System.out.println("Elapsed time: " + (end - start));
+            image.flush();
+            store.close();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        // NOTE http://www.coderanch.com/t/445956/open-source/add-tiff-writer-imageio-package
+        //      On reading and writing TIFF files
         
         System.out.println("done.");
     }
