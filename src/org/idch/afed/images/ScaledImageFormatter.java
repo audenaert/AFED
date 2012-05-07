@@ -138,9 +138,9 @@ public class ScaledImageFormatter implements ImageFormatter {
         try {
             // TODO add configure levers to adjust quality and anti-aliasing or not.
             BufferedImage scaledImg = Scalr.resize(src, Method.QUALITY, 
-                    this.width, this.height, Scalr.OP_ANTIALIAS);
-
+                    this.width, this.height);
             store.store(this.name + ".jpg", scaledImg, "jpg");
+            scaledImg.flush();      // make it easier for the GC to free this memory
         } catch (IOException ioe) {
             throw new  ImageProcessorException(ioe);
         } catch (Exception e) {
