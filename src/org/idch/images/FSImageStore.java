@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.idch.afed.images;
+package org.idch.images;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -151,7 +151,7 @@ public class FSImageStore implements ImageStore {
     }
     
     /** 
-     * @see org.idch.afed.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
+     * @see org.idch.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
      */
     @Override
     public void store(String relPath, BufferedImage image) throws IOException {
@@ -159,7 +159,7 @@ public class FSImageStore implements ImageStore {
     }
     
     /** 
-     * @see org.idch.afed.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
+     * @see org.idch.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
      */
     @Override
     public void store(String relPath, BufferedImage image, String format) throws IOException {
@@ -267,7 +267,7 @@ public class FSImageStore implements ImageStore {
 
     /** 
      * Indicates whether this image store can write images in the specified format.  
-     * @see org.idch.afed.images.ImageStore#canWrite(java.lang.String)
+     * @see org.idch.images.ImageStore#canWrite(java.lang.String)
      */
     @Override
     public boolean canWrite(String format) {
@@ -281,7 +281,7 @@ public class FSImageStore implements ImageStore {
 
     /**
      * Indicates whether this image store can read images in the specified format. 
-     * @see org.idch.afed.images.ImageStore#canRead(java.lang.String)
+     * @see org.idch.images.ImageStore#canRead(java.lang.String)
      */
     @Override
     public boolean canRead(String format) {

@@ -8,14 +8,14 @@
  * Copyright Institute for Digital Christian Heritage (IDCH) 
  *           All Rights Reserved.
  */
-package org.idch.tzivi;
+package org.idch.images.dz;
 
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
-import org.idch.afed.images.ImageStore;
+import org.idch.images.ImageStore;
 import org.idch.util.LogService;
 
 /** 

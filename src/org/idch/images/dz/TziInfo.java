@@ -20,7 +20,7 @@
  * FOR USE WITHIN A PARTICULAR RESEARCH PROJECT AND NO CLAIM IS MADE AS 
  * TO IS CORRECTNESS, PERFORMANCE, OR SUITABILITY FOR ANY USE.
  */
-package org.idch.tzivi;
+package org.idch.images.dz;
 
 import java.util.HashMap;
 import java.util.Map;

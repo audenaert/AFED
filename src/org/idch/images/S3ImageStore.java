@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.idch.afed.images;
+package org.idch.images;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

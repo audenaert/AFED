@@ -9,6 +9,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.idch.images.FSImageStore;
+import org.idch.images.ImageContext;
+import org.idch.images.TileIterator;
+
 import junit.framework.TestCase;
 
 /**

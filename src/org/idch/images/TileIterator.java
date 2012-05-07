@@ -8,7 +8,7 @@
  *
  * ALL RIGHTS RESERVED. 
  */
-package org.idch.afed.images;
+package org.idch.images;
 
 import java.awt.Graphics;
 import java.awt.Transparency;

@@ -8,15 +8,15 @@
  * Copyright Institute for Digital Christian Heritage (IDCH) 
  *           All Rights Reserved.
  */
-package org.idch.tzivi;
+package org.idch.images.dz;
 
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.idch.afed.images.ImageContext;
-import org.idch.afed.images.ImageStore;
-import org.idch.afed.images.TileIterator;
+import org.idch.images.ImageContext;
+import org.idch.images.ImageStore;
+import org.idch.images.TileIterator;
 import org.idch.tzivi.legacy.TziGenerator;
 import org.idch.util.Scalr;
 import org.idch.util.Scalr.Method;

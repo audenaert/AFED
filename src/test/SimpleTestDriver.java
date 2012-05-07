@@ -14,12 +14,12 @@ import javax.persistence.EntityManagerFactory;
 import org.hibernate.Session;
 import org.idch.afed.Facsimile;
 import org.idch.afed.FacsimileRepository;
-import org.idch.afed.images.FSImageStore;
-import org.idch.afed.images.ImageContext;
 import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
+import org.idch.images.FSImageStore;
+import org.idch.images.ImageContext;
+import org.idch.images.dz.FSTziCreator;
+import org.idch.images.dz.TziConfig;
 import org.idch.ms.Designation;
-import org.idch.tzivi.FSTziCreator;
-import org.idch.tzivi.TziConfig;
 import org.idch.util.PersistenceUtil;
 import org.idch.util.persist.RepositoryAccessException;
 

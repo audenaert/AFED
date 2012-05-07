@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.idch.afed.images;
+package org.idch.images;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class ImageContext implements ImageStore {
     
     /** 
      * Returns the indicated image.
-     * @see org.idch.afed.images.ImageStore#get(java.lang.String)
+     * @see org.idch.images.ImageStore#get(java.lang.String)
      */
     @Override
     public BufferedImage get(String relPath) throws IOException {
@@ -55,7 +55,7 @@ public class ImageContext implements ImageStore {
      * Stores the image under the supplied relative path. If null, this will
      * store the image at the rootContext for this image store.
      *  
-     * @see org.idch.afed.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
+     * @see org.idch.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage)
      */
     @Override
     public void store(String relPath, BufferedImage image) throws IOException {
@@ -63,7 +63,7 @@ public class ImageContext implements ImageStore {
     }
 
     /**
-     * @see org.idch.afed.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage, java.lang.String)
+     * @see org.idch.images.ImageStore#store(java.lang.String, java.awt.image.BufferedImage, java.lang.String)
      */
     @Override
     public void store(String relPath, BufferedImage image, String format)
@@ -107,7 +107,7 @@ public class ImageContext implements ImageStore {
      * Throws a runtime exception. Clients should call connect and close on the 
      * underlying image store instance directly. 
      * 
-     * @see org.idch.afed.images.ImageStore#connect()
+     * @see org.idch.images.ImageStore#connect()
      */
     @Override
     public void connect() {
@@ -119,7 +119,7 @@ public class ImageContext implements ImageStore {
      * Throws a runtime exception. Clients should call connect and close on the 
      * underlying image store instance directly. 
      * 
-     * @see org.idch.afed.images.ImageStore#close()
+     * @see org.idch.images.ImageStore#close()
      */
     @Override
     public void close() {
@@ -128,7 +128,7 @@ public class ImageContext implements ImageStore {
     }
 
     /**
-     * @see org.idch.afed.images.ImageStore#isConnected()
+     * @see org.idch.images.ImageStore#isConnected()
      */
     @Override
     public boolean isConnected() {
@@ -136,7 +136,7 @@ public class ImageContext implements ImageStore {
     }
 
     /**
-     * @see org.idch.afed.images.ImageStore#isClosed()
+     * @see org.idch.images.ImageStore#isClosed()
      */
     @Override
     public boolean isClosed() {
@@ -144,7 +144,7 @@ public class ImageContext implements ImageStore {
     }
 
     /**
-     * @see org.idch.afed.images.ImageStore#canWrite(java.lang.String)
+     * @see org.idch.images.ImageStore#canWrite(java.lang.String)
      */
     @Override
     public boolean canWrite(String format) {
@@ -152,7 +152,7 @@ public class ImageContext implements ImageStore {
     }
 
     /**
-     * @see org.idch.afed.images.ImageStore#canRead(java.lang.String)
+     * @see org.idch.images.ImageStore#canRead(java.lang.String)
      */
     @Override
     public boolean canRead(String format) {

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.idch.images.FSImageStore;
+import org.idch.images.ImageContext;
 import org.idch.util.Filenames;
 
 import junit.framework.TestCase;
