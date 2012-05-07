@@ -9,17 +9,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.idch.util.Filenames;
-
 import junit.framework.TestCase;
 
 /**
  * @author Neal Audenaert
  */
-public class ScaledImageFormatterTests extends TestCase {
+public class TileIterartorTests extends TestCase {
     private static final String TEST_IMAGE = "data/testdata/images/GA0209/0001a.jpg";
     private static final File OUTPUT_DIR = new File("data/testdata/temp/fsimagestore"); 
-    private static final String CTX =  "GA0209/0001a";
+    private static final String CTX =  "tiles/";
     
     private FSImageStore store;
     private ImageContext context;
@@ -39,26 +37,14 @@ public class ScaledImageFormatterTests extends TestCase {
 //        Filenames.deleteDirectory(OUTPUT_DIR);
     }
     
-    public void testScaleImage() throws IOException {
-        ImageFormatter formatter = new ScaledImageFormatter("test", 150, 150);
-        
+    public void testTileCreation() throws IOException {
         BufferedImage image = ImageIO.read(new File(TEST_IMAGE));
-        
-        String fname = ";type=UV/";
-        ImageContext ctx = new ImageContext(context, fname);
-        
-        formatter.process(image, ctx);
-        
-        BufferedImage im2 = ctx.get("test.jpg");
-        assertNotNull(im2);
+        TileIterator tiles = new TileIterator(image, 256);
+        while (tiles.hasNext()) {
+            BufferedImage img = tiles.next();
+            context.store(tiles.getY() + "," + tiles.getX() + ".jpg", img, "jpg");
+        }
     }
     
-    public void testImageProcessor() throws IOException {
-        ImageProcessor proc = ImageProcessor.getImageProcessor("");
-        
-        BufferedImage image = ImageIO.read(new File(TEST_IMAGE));
-        String path = "GA0209/0001a;type=UV/";
-        proc.process(image, path);
-        
-    }
+    // TODO test basic properties like the number of tiles, sum of tile sizes, etc.
 }
