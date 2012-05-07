@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.idch.images;
+package org.idch.images.stores;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
+import org.idch.images.ImageStore;
 import org.idch.util.Filenames;
 
 /**

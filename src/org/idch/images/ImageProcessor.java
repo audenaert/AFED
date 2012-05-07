@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.idch.images.ImageFormatter.ImageProcessorException;
+import org.idch.images.processors.ScaledImageFormatter;
+import org.idch.images.stores.FSImageStore;
 
 /**
  * 

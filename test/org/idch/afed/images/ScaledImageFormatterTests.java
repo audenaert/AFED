@@ -9,11 +9,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.idch.images.FSImageStore;
 import org.idch.images.ImageContext;
 import org.idch.images.ImageFormatter;
 import org.idch.images.ImageProcessor;
-import org.idch.images.ScaledImageFormatter;
+import org.idch.images.processors.ScaledImageFormatter;
+import org.idch.images.stores.FSImageStore;
 import org.idch.util.Filenames;
 
 import junit.framework.TestCase;

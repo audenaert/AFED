@@ -1,10 +1,12 @@
 /**
  * 
  */
-package org.idch.images;
+package org.idch.images.stores;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import org.idch.images.ImageStore;
 
 /**
  * @author Neal Audenaert

@@ -1,13 +1,16 @@
 /**
  * 
  */
-package org.idch.images;
+package org.idch.images.processors;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.idch.images.ImageContext;
+import org.idch.images.ImageFormatter;
+import org.idch.images.ImageFormatter.ImageProcessorException;
 import org.idch.util.Scalr;
 import org.idch.util.Scalr.Method;
 
