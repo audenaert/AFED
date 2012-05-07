@@ -22,7 +22,7 @@ public class FSImageStore implements ImageStore {
 
     public static final String DEFAULT_FORMAT = "jpeg";
     
-    public static FSImageStore createImageStore(String path) throws IOException {
+    public static FSImageStore getImageStore(String path) throws IOException {
         FSImageStore store = new FSImageStore();
         store.setBaseDir(path);
         
@@ -57,6 +57,9 @@ public class FSImageStore implements ImageStore {
             
             this.baseDir = new File(path);
             this.basePath = Filenames.getCanonicalPOSIXPath(this.baseDir);
+            if (!this.baseDir.exists()) {
+                this.baseDir.mkdirs();
+            }
 
             if (!this.baseDir.canWrite()) {
                 throw new IOException("The supplied base directory is not writable: " + this.basePath);
@@ -260,5 +263,33 @@ public class FSImageStore implements ImageStore {
         public boolean isLocked() {
             return locked;
         }
+    }
+
+    /** 
+     * Indicates whether this image store can write images in the specified format.  
+     * @see org.idch.afed.images.ImageStore#canWrite(java.lang.String)
+     */
+    @Override
+    public boolean canWrite(String format) {
+        for (String f : ImageIO.getWriterFormatNames()) {
+            if (f.equals(format)) { 
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicates whether this image store can read images in the specified format. 
+     * @see org.idch.afed.images.ImageStore#canRead(java.lang.String)
+     */
+    @Override
+    public boolean canRead(String format) {
+        for (String f : ImageIO.getReaderFormatNames()) {
+            if (f.equals(format)) { 
+                return true;
+            }
+        }
+        return false;
     }
 }

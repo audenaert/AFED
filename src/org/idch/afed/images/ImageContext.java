@@ -143,4 +143,20 @@ public class ImageContext implements ImageStore {
         return this.delegate.isClosed();
     }
 
+    /**
+     * @see org.idch.afed.images.ImageStore#canWrite(java.lang.String)
+     */
+    @Override
+    public boolean canWrite(String format) {
+        return this.delegate.canWrite(format);
+    }
+
+    /**
+     * @see org.idch.afed.images.ImageStore#canRead(java.lang.String)
+     */
+    @Override
+    public boolean canRead(String format) {
+        return this.delegate.canRead(format);
+    }
+
 }

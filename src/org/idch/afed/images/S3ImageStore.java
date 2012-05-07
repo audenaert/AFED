@@ -85,6 +85,24 @@ public class S3ImageStore implements ImageStore {
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see org.idch.afed.images.ImageStore#canWrite(java.lang.String)
+     */
+    @Override
+    public boolean canWrite(String format) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.idch.afed.images.ImageStore#canRead(java.lang.String)
+     */
+    @Override
+    public boolean canRead(String format) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     
 
 }
