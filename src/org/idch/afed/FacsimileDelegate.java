@@ -66,7 +66,7 @@ public interface FacsimileDelegate {
     // IMAGE METHODS
     //==============================================================================
     
-    public void addImage(String subContext, InputStream is, String type);
+    public Image addImage(String subContext, InputStream is, String type);
     
     public List<String> listImages();
     

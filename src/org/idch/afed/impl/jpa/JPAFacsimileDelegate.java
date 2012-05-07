@@ -19,12 +19,12 @@ import javax.persistence.Transient;
 import org.idch.afed.Collation;
 import org.idch.afed.FacsimileDelegate;
 import org.idch.afed.FacsimileRepository;
+import org.idch.afed.Image;
 import org.idch.meta.DublinCore;
 import org.idch.ms.Designation;
 
 import org.idch.util.Field;
 import org.idch.util.PersistentObject;
-import org.idch.util.SetField;
 
 /**
  * @author Neal Audenaert
@@ -370,7 +370,10 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * @see org.idch.afed.Facsimile#addImage(java.lang.String, java.io.InputStream, java.lang.String)
      */
     @Override
-    public void addImage(String subContext, InputStream is, String type) {
+    public Image addImage(String subContext, InputStream is, String type) {
+        
+//        JPAImageDelegate image = new JPAImageDelegate();
+        return null;
         // TODO Auto-generated method stub
         
     }
