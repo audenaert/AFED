@@ -1,9 +1,11 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
 import java.util.List;
+
+import org.idch.afed.Image;
 
 /**
  * @author Neal Audenaert

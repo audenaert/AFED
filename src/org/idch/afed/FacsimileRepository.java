@@ -3,35 +3,69 @@
  */
 package org.idch.afed;
 
-import java.util.List;
-import java.util.Map;
-
-import org.idch.afed.impl.jpa.JPAFacsimileRepository;
 import org.idch.util.persist.RepositoryAccessException;
 
 /**
  * @author Neal Audenaert
  */
-public abstract class FacsimileRepository {
+public interface FacsimileRepository {
     
-    public static FacsimileRepository getInstance() {
-        // TODO automagically look this up based on config information. For now, 
-        //      we're just going to assume JPA.
-        return JPAFacsimileRepository.getInstance();
-    }
-            
-    public abstract Facsimile get(String scheme);
+    public void dispose();
     
-    public abstract Map<String, String> list();
+    public boolean isDisposed();
     
-    public abstract List<String> list(String scheme);
+    /**
+     * Returns an immutable instance of the identified facsimile. 
+     * 
+     * @param id The id of the facsimile to return.
+     * @return The identified facsimile or null if no such facsimile exists.
+     */
+    public Facsimile get(String id);
     
-    public abstract Facsimile create(String name, String description, String date) 
+    /**
+     * Returns a mutator that can be used to edit the identified facsimile.
+     * 
+     * @param id The id of the facsimile to be edited.
+     * @return A mutator for the identified facsimile.
+     */
+    public FacsimileMutator getFacsimileMutator(String id);
+    
+    /** 
+     * Creates a new <tt>Facsimile</tt>
+     * 
+     * @param name The display name of the facsimile to create.
+     * @param desc A description of the facsimile to create.
+     * @param date The date when the facsimile is thought to have been created.
+     * @throws RepositoryAccessException If there are problems accessing the underlying
+     *      persistent data store.
+     */
+    public Facsimile create(String name, String description, String date) 
             throws RepositoryAccessException;
     
-    public abstract void save(Facsimile f) 
-            throws RepositoryAccessException;
     
+    /**
+     * TODO should return a FacsimileSet, an iterable that walks over all facsimiles
+     *      in the document. This will allow for a variety of lazy fetching strategies.
+     * @return
+     */
+    public Iterable<Facsimile> list();
+    
+//    /**
+//     * 
+//     * @param scheme
+//     * @return
+//     */
+//    public List<String> list(String scheme);
+//    
+//    public void list(Designation d);
+//    
+//    public Facsimile get(String scheme);
+
     // TODO need a generic way of searching
+    
+    // TODO need a generic way of listening for changes
+    //      FacsimileCreatedListener
+    //      FacsimileChangedListener
+    //      DataChangedListener
 
 }

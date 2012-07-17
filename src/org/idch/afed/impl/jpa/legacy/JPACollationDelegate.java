@@ -1,32 +1,30 @@
 /**
  * 
  */
-package org.idch.afed.impl.jpa;
+package org.idch.afed.impl.jpa.legacy;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.idch.afed.CollationDelegate;
-import org.idch.afed.FacsimileDelegate;
 import org.idch.afed.FacsimileRepository;
 import org.idch.afed.Image;
+import org.idch.afed.impl.jpa.JPAFacsimileRepository;
+import org.idch.afed.legacy.CollationDelegate;
+import org.idch.afed.legacy.FacsimileDelegate;
 import org.idch.util.Field;
 import org.idch.util.PersistentObject;
 
 /**
  * @author Neal Audenaert
  */
-@Entity
-@Table(name="COLLATIONS")
+//@Entity
+//@Table(name="COLLATIONS")
 public class JPACollationDelegate  extends PersistentObject<JPAFacsimileDelegate> implements CollationDelegate {
     /** The repository to be used to update this collation and to create 
      *  new resources (images, features, etc.). */
@@ -69,7 +67,7 @@ public class JPACollationDelegate  extends PersistentObject<JPAFacsimileDelegate
         }
         
         if (null == repo) {
-            repo = FacsimileRepository.getInstance();
+            repo = JPAFacsimileRepository.getInstance();
         } else if (repo instanceof JPAFacsimileRepository) {
             this.repo = (JPAFacsimileRepository)repo;
             super.setEntityManagerFactory(this.repo.getEmf());
@@ -90,7 +88,7 @@ public class JPACollationDelegate  extends PersistentObject<JPAFacsimileDelegate
         this.id = id;
     }
 
-    @ManyToOne
+//    @ManyToOne
     JPAFacsimileDelegate getFacsimile() {
         return facsimile;
     }

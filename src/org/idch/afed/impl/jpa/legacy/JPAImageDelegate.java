@@ -1,30 +1,27 @@
 /**
  * 
  */
-package org.idch.afed.impl.jpa;
+package org.idch.afed.impl.jpa.legacy;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.idch.afed.Collation;
-import org.idch.afed.Facsimile;
-import org.idch.afed.FacsimileDelegate;
-import org.idch.afed.ImageDelegate;
+import org.idch.afed.legacy.BasicFacsimile;
+import org.idch.afed.legacy.Collation;
+import org.idch.afed.legacy.FacsimileDelegate;
+import org.idch.afed.legacy.ImageDelegate;
 
 /**
  * @author Neal Audenaert
  */
-@Entity
-@Table(name="IMAGES")
+//@Entity
+//@Table(name="IMAGES")
 public class JPAImageDelegate implements ImageDelegate {
     
+    @Id @GeneratedValue 
     private Long id;
     
     private JPAFacsimileDelegate facsimle;
@@ -46,7 +43,6 @@ public class JPAImageDelegate implements ImageDelegate {
     }
     
     /** Returns the persistent id. */
-    @Id @GeneratedValue 
     Long getJPAId() {
         return this.id;
     }
@@ -61,10 +57,9 @@ public class JPAImageDelegate implements ImageDelegate {
      * Returns the facsimile this image is associated with.
      * @see org.idch.afed.ImageDelegate#getFacsimile()
      */
-    @ManyToOne
     @Override
-    public Facsimile getFacsimile() {
-        return new Facsimile(this.facsimle);
+    public BasicFacsimile getFacsimile() {
+        return new BasicFacsimile(this.facsimle);
     }
 
     /** 
@@ -73,7 +68,6 @@ public class JPAImageDelegate implements ImageDelegate {
      * 
      * @see org.idch.afed.ImageDelegate#listCollations()
      */
-    @Transient 
     @Override
     public Set<Collation> listCollations() {
         // TODO should lookup from persistence layer

@@ -1,9 +1,12 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
 import java.util.Set;
+
+import org.idch.afed.legacy.BasicFacsimile;
+import org.idch.afed.legacy.Collation;
 
 /**
  * Provides a thin wrapper around an image that represents.
@@ -14,7 +17,7 @@ public interface ImageDelegate {
     /** 
      * Lists the facsimile that this image belongs to.
      */
-    public Facsimile getFacsimile();
+    public BasicFacsimile getFacsimile();
     
     /**
      * Lists the collations that reference this image.

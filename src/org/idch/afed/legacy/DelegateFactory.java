@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
-import org.idch.afed.impl.jpa.JPACollationDelegate;
-import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
-import org.idch.afed.impl.jpa.JPAImageDelegate;
+import org.idch.afed.legacy.ImageDelegate;
+import org.idch.afed.impl.jpa.legacy.JPACollationDelegate;
+import org.idch.afed.impl.jpa.legacy.JPAFacsimileDelegate;
+import org.idch.afed.impl.jpa.legacy.JPAImageDelegate;
 
 /**
  * @author Neal Audenaert
@@ -22,15 +23,15 @@ class DelegateFactory {
         return new JPAFacsimileDelegate(name, desc, date);
     }
 
-    public static CollationDelegate getCollationDelegate(Facsimile f) {
+    public static CollationDelegate getCollationDelegate(BasicFacsimile f) {
         return new JPACollationDelegate(f.getDelegate());
     }
     
-    public static CollationDelegate getCollationDelegate(Facsimile f, String name, String desc) {
+    public static CollationDelegate getCollationDelegate(BasicFacsimile f, String name, String desc) {
         return new JPACollationDelegate(f.getDelegate(), name, desc);
     }
     
-    public static ImageDelegate getImageDelegate(Facsimile f, String ctx) {
+    public static ImageDelegate getImageDelegate(BasicFacsimile f, String ctx) {
         return new JPAImageDelegate(f.getDelegate(), ctx);
     }
 }

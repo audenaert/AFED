@@ -1,10 +1,14 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
 import java.io.InputStream;
 import java.util.Set;
+
+import org.idch.afed.legacy.BasicFacsimile;
+import org.idch.afed.legacy.Collation;
+import org.idch.afed.legacy.DelegateFactory;
 
 /**
  * Provides a thin wrapper around an image that represents.
@@ -18,11 +22,11 @@ public class Image {
     // CONSTRUCTORS
     //=========================================================================
     
-    public Image(Facsimile f, String ctx) {
+    public Image(BasicFacsimile f, String ctx) {
         this.delegate = DelegateFactory.getImageDelegate(f, ctx);
     }
     
-    public Image(Facsimile f, InputStream is, String ctx) {
+    public Image(BasicFacsimile f, InputStream is, String ctx) {
         this.delegate = null;
     }
     
@@ -42,7 +46,7 @@ public class Image {
      * Lists the facsimile that this image belongs to.
      * @return
      */
-    public Facsimile getFacsimile() {
+    public BasicFacsimile getFacsimile() {
         return delegate.getFacsimile();
     }
     

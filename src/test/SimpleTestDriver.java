@@ -11,17 +11,17 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.hibernate.Session;
 import org.idch.afed.Facsimile;
 import org.idch.afed.FacsimileRepository;
-import org.idch.afed.impl.jpa.JPAFacsimileDelegate;
+import org.idch.afed.impl.jpa.JPAFacsimileRepository;
+import org.idch.afed.impl.jpa.legacy.JPAFacsimileDelegate;
+import org.idch.afed.legacy.BasicFacsimile;
 import org.idch.images.ImageContext;
 import org.idch.images.dz.FSTziCreator;
 import org.idch.images.dz.TziConfig;
 import org.idch.images.stores.FSImageStore;
-import org.idch.ms.Designation;
+import org.idch.ms.BasicDesignation;
 import org.idch.util.PersistenceUtil;
-import org.idch.util.persist.RepositoryAccessException;
 
 
 /**
@@ -31,7 +31,7 @@ public class SimpleTestDriver {
     
     public static void apiTest() {
         try {
-            FacsimileRepository repo = FacsimileRepository.getInstance();
+            FacsimileRepository repo = JPAFacsimileRepository.getInstance();
 
             int ct = 1;
 
@@ -39,25 +39,65 @@ public class SimpleTestDriver {
             String desc = "A simple facsimile object to test if this works";
             String date = "IV";
 
-            Facsimile f = new Facsimile(name, desc, date);
-            f.putDesignation(new Designation("GA", "P46"));
+            BasicFacsimile f = new BasicFacsimile(name, desc, date);
+            f.putDesignation(new BasicDesignation("GA", "P46"));
             f.save();
             System.out.println(f + " " + f.getDateOfOrigin());
-            Set<Designation> desgns = f.getDesignations();
-            for (Designation d : desgns) {
+            Set<BasicDesignation> desgns = f.getDesignations();
+            for (BasicDesignation d : desgns) {
                 System.out.println("    " + d);
             }
 
             f.setDateOfOrigin("XII");
             f.setName("Bob's your uncle");
-            f.putDesignation(new Designation("GA", "02"));
-            f.putDesignation(new Designation("shelf", "232d02"));
+            f.putDesignation(new BasicDesignation("GA", "02"));
+            f.putDesignation(new BasicDesignation("shelf", "232d02"));
             f.save();
             System.out.println(f + " " + f.getDateOfOrigin());
-            for (Designation d : desgns) {
+            for (BasicDesignation d : desgns) {
                 System.out.println("    " + d);
             }
 
+            repo.list();
+            
+        } finally {
+            PersistenceUtil.shutdown();
+        }
+    }
+    
+    public static void apiTest2() {
+        try {
+            FacsimileRepository repo = JPAFacsimileRepository.getInstance();
+
+            int ct = 1;
+
+            String name = "Test Facsimile " + ct++;
+            String desc = "A simple facsimile object to test if this works";
+            String date = "IV";
+            
+            Facsimile f = repo.create(name, desc, date);
+
+//            BasicFacsimile f = new BasicFacsimile(name, desc, date);
+//            f.putDesignation(new BasicDesignation("GA", "P46"));
+//            f.save();
+            System.out.println(f + " " + f.getDateOfOrigin());
+//            Set<BasicDesignation> desgns = f.getDesignations();
+//            for (BasicDesignation d : desgns) {
+//                System.out.println("    " + d);
+//            }
+//
+//            f.setDateOfOrigin("XII");
+//            f.setName("Bob's your uncle");
+//            f.putDesignation(new BasicDesignation("GA", "02"));
+//            f.putDesignation(new BasicDesignation("shelf", "232d02"));
+//            f.save();
+//            System.out.println(f + " " + f.getDateOfOrigin());
+//            for (BasicDesignation d : desgns) {
+//                System.out.println("    " + d);
+//            }
+
+            repo.list();
+            
         } finally {
             PersistenceUtil.shutdown();
         }
@@ -98,7 +138,7 @@ public class SimpleTestDriver {
 
     public static void directTest() {
         try {
-            FacsimileRepository repo = FacsimileRepository.getInstance();
+            FacsimileRepository repo = JPAFacsimileRepository.getInstance();
 
             int ct = 1;
 
@@ -107,7 +147,7 @@ public class SimpleTestDriver {
             String date = "IV";
 
             JPAFacsimileDelegate f = new JPAFacsimileDelegate(name, desc, date);
-            Designation p46 = new Designation("GA", "P46");
+            BasicDesignation p46 = new BasicDesignation("GA", "P46");
             f.putDesignation(p46);
             
             EntityManagerFactory emf = PersistenceUtil.getEMFactory("org.idch.afed");
@@ -122,8 +162,8 @@ public class SimpleTestDriver {
             
 //            f.save();
             System.out.println(f + " " + f.getDateOfOrigin());
-            Set<Designation> desgns = f.getDesignations();
-            for (Designation d : desgns) {
+            Set<BasicDesignation> desgns = f.getDesignations();
+            for (BasicDesignation d : desgns) {
                 System.out.println("    " + d);
             }
 //
@@ -142,16 +182,7 @@ public class SimpleTestDriver {
         }
     }
     
-    private static final String TEST_IMAGE = "data/testdata/images/GA0209/0001a.jpg";
-    private static final File OUTPUT_DIR = new File("data/testdata/temp/fsimagestore"); 
-    private static final String CTX =  "tiles/";
-
-    public static void main(String [] args) {
-//        apiTest();
-//        for (String fmt : ImageIO.getReaderFormatNames()) {
-//            System.out.println(fmt);
-//            
-//        }
+    private static void testImageImport() {
         try {
             File f = new File("I:\\DonneImages\\1633\\001-2.tif");
             if (f.exists() && f.canRead()) {
@@ -177,6 +208,55 @@ public class SimpleTestDriver {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private static final String TEST_IMAGE = "data/testdata/images/GA0209/0001a.jpg";
+    private static final File OUTPUT_DIR = new File("data/testdata/temp/fsimagestore"); 
+    private static final String CTX =  "tiles/";
+
+    public static void main(String [] args) {
+        
+        FacsimileRepository repo = JPAFacsimileRepository.getInstance();
+
+        String name = "Test Facsimile";
+        String desc = "A simple facsimile object to test if this works";
+        String date = "IV";
+
+        boolean error = false;
+        Facsimile f = repo.create(name, desc, date);
+        if (f == null) {
+            System.err.println("Facsimile as null.");
+            error = true;
+        } else {
+            if (!f.getName().equals(name)) {
+                System.err.println("Incorrect name: " + f.getName());
+                error = true;
+            }
+            
+            if (!f.getDescription().equals(desc)) {
+                System.err.println("Incorrect description: " + f.getDescription());
+                error = true;
+            }
+            
+            if (!f.getDateOfOrigin().equals(date)) {
+                System.err.println("Incorrect date: " + f.getDateOfOrigin());
+                error = true;
+            }
+        }
+        
+//        FacsimileMutator mutable = repo.
+        
+        System.out.println(error ? "Errors" : "OK");
+        
+//        apiTest();
+//        for (String fmt : ImageIO.getReaderFormatNames()) {
+//            System.out.println(fmt);
+//            
+//        }
+        
+//        FacsimileRepository repo = FacsimileRepository.getInstance();
+//        repo.list();
+        
         
         // NOTE http://www.coderanch.com/t/445956/open-source/add-tiff-writer-imageio-package
         //      On reading and writing TIFF files

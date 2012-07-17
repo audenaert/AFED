@@ -3,8 +3,14 @@ package org.idch.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
 
 /**
  * Bootstrapping class for obtaining references to <tt>EntityManagerFactories</tt> and for 
@@ -59,6 +65,46 @@ public class PersistenceUtil {
         		}
         	}
         }
+    }
+    
+    /**
+     * Saves a new Entity or updates the state of an existing (modified) entity. 
+     * 
+     * @param emf The <tt>EntityManagerFactory</tt> to be used to save this object.
+     * @param obj The object to be saved.
+     * @return The saved object. Note that this may be a reference to a different object
+     *      than was initially passed in to be saved. References to the original object 
+     *      should be used and references to the provided object should be discarded.
+     */
+    public static <T> T save(EntityManagerFactory emf, T obj) {
+        EntityManager em = emf.createEntityManager();
+        Session sess = (Session)em.getDelegate();       // HACK: dependency on Hibernate instead of JPA 
+        
+        sess.getTransaction().begin();
+        sess.saveOrUpdate(obj);
+        sess.flush();
+        sess.getTransaction().commit();
+        em.close();
+        
+        return obj;
+    }
+    
+    /**
+     * Counts the number of results of a search. Note that this works only for queries 
+     * that do not have a join clause.
+     * 
+     * @param criteria The criteria for the query.
+     * @return The number of results of the query.
+     */
+    public static <T> Long findCountByCriteria(CriteriaQuery<T> criteria, EntityManager em) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+
+        CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
+        Root<T> entityRoot = countCriteria.from(criteria.getResultType());
+        countCriteria.select(builder.count(entityRoot));
+        countCriteria.where(criteria.getRestriction());
+
+        return em.createQuery(countCriteria).getSingleResult();
     }
 }
 

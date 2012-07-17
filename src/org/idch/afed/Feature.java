@@ -7,10 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.idch.afed.legacy.Collation;
+
 /**
  * @author Neal Audenaert
  */
-public interface Feature {
+public interface Feature extends Iterable<Image> {
     // TODO support non-contiguous annotations
     //      support transcriptions
     //      support cross references

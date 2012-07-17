@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,11 +21,11 @@ public class Collation {
     // CONSTRUCTORS
     //=========================================================================
     
-    public Collation(Facsimile f) {
+    public Collation(BasicFacsimile f) {
         this.delegate = DelegateFactory.getCollationDelegate(f);
     }
     
-    public Collation(Facsimile f, String name, String description) {
+    public Collation(BasicFacsimile f, String name, String description) {
         this.delegate = DelegateFactory.getCollationDelegate(f, name, description);
     }
     

@@ -382,6 +382,7 @@ public class TziInfo {
     
     /** Represents a single layer within a TZI. */
     private static class ZoomableLayer {
+        // TODO add Jackson and JAXB serialization, make as API?
         
         // Symbolic constants for the serialized XML form of the layer. */
         private static final String ELEMENT_NAME = "layer";

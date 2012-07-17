@@ -1,14 +1,15 @@
 /**
  * 
  */
-package org.idch.afed;
+package org.idch.afed.legacy;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import org.idch.afed.Image;
 import org.idch.meta.DublinCore;
-import org.idch.ms.Designation;
+import org.idch.ms.BasicDesignation;
 
 /**
  * @author Neal Audenaert
@@ -22,15 +23,15 @@ public interface FacsimileDelegate {
      * @param schema
      * @return
      */
-    public Designation getDesignation(String schema);
+    public BasicDesignation getDesignation(String schema);
     
     public boolean hasDesignation(String schema);
     
-    public Designation putDesignation(Designation d);
+    public BasicDesignation putDesignation(BasicDesignation d);
     
-    public Designation removeDesignation(String scheme);
+    public BasicDesignation removeDesignation(String scheme);
     
-    public Set<Designation> getDesignations();
+    public Set<BasicDesignation> getDesignations();
     
     public String getName();
     

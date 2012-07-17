@@ -1,36 +1,32 @@
 /**
  * 
  */
-package org.idch.afed.impl.jpa;
+package org.idch.afed.impl.jpa.legacy;
 
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.idch.afed.Collation;
-import org.idch.afed.FacsimileDelegate;
 import org.idch.afed.FacsimileRepository;
 import org.idch.afed.Image;
+import org.idch.afed.impl.jpa.JPAFacsimileRepository;
+import org.idch.afed.legacy.Collation;
+import org.idch.afed.legacy.FacsimileDelegate;
 import org.idch.meta.DublinCore;
-import org.idch.ms.Designation;
-
+import org.idch.ms.BasicDesignation;
 import org.idch.util.Field;
 import org.idch.util.PersistentObject;
 
 /**
  * @author Neal Audenaert
  */
-@Entity
-@Table(name="FACSIMILES")
 public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate> implements FacsimileDelegate {
 
     /** The repository to be used to update this facsimile and to create 
@@ -43,7 +39,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     private Field<String> description = fields.create((String)null);
     private Field<String> date = fields.create((String)null);
     
-    private Set<Designation> designations = new HashSet<Designation>();
+    private Set<BasicDesignation> designations = new HashSet<BasicDesignation>();
     private Set<JPACollationDelegate> collations = new HashSet<JPACollationDelegate>(); 
     
     private DublinCore dc = null;
@@ -79,6 +75,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
         this.date.set(date);
     }
     
+    
     void initRepository(FacsimileRepository repo) {
         // FIXME do we need a repo, or just an EMF? 
         // FIXME How do we initialize this when retrieving objects from JPA
@@ -91,7 +88,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
         }
         
         if (null == repo) {
-            repo = FacsimileRepository.getInstance();
+            repo = JPAFacsimileRepository.getInstance();
         } 
 
         if (repo instanceof JPAFacsimileRepository) {
@@ -111,7 +108,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * @see org.idch.afed.Facsimile#listDesignations()
      */
     @ManyToMany @Override
-    public Set<Designation> getDesignations() {
+    public Set<BasicDesignation> getDesignations() {
 //        boolean autoAttached = false;
 //        if (this.isAttached()) { 
 //            this.attach();
@@ -131,10 +128,10 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * @see org.idch.afed.Facsimile#getDesignation(java.lang.String)
      */
     @Override
-    public Designation getDesignation(String scheme) {
+    public BasicDesignation getDesignation(String scheme) {
         // FIXME this is really inefficient. Requires full DB load.
-        Designation result = null;
-        for (Designation d : this.designations) {
+        BasicDesignation result = null;
+        for (BasicDesignation d : this.designations) {
             if (d.getScheme().equals(scheme)) {
                 result = d;
                 break;
@@ -158,8 +155,8 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * @see org.idch.afed.Facsimile#putDesignation(org.idch.ms.Designation)
      */
     @Override
-    public Designation putDesignation(Designation d) {
-        Designation existing = this.getDesignation(d.getScheme());
+    public BasicDesignation putDesignation(BasicDesignation d) {
+        BasicDesignation existing = this.getDesignation(d.getScheme());
         if ((null != existing) && existing.equals(d)) {
             return null;        // no action is needed
         }
@@ -175,8 +172,8 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     }
     
     @Override
-    public Designation removeDesignation(String scheme) {
-        Designation existing = this.getDesignation(scheme);
+    public BasicDesignation removeDesignation(String scheme) {
+        BasicDesignation existing = this.getDesignation(scheme);
         if (null == existing) {
             return null;
         }
@@ -197,7 +194,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * 
      * @param designations
      */
-    void setDesignations(Set<Designation> designations) {
+    void setDesignations(Set<BasicDesignation> designations) {
         this.designations = designations;
     }
     
@@ -219,7 +216,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     /** 
      * Returns the name for this document.
      * 
-     * @see org.idch.afed.Facsimile#getName()
+     * @see org.idch.afed.legacy.BasicFacsimile#getName()
      */
     @Override
     public String getName() {
@@ -229,7 +226,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     /** 
      * Returns a description of this document.
      * 
-     * @see org.idch.afed.Facsimile#getDescription()
+     * @see org.idch.afed.legacy.BasicFacsimile#getDescription()
      */
     @Override
     public String getDescription() {
@@ -239,7 +236,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     /** 
      * Returns the date this document is thought to have been created.
      * 
-     * @see org.idch.afed.Facsimile#getDateOfOrigin()
+     * @see org.idch.afed.legacy.BasicFacsimile#getDateOfOrigin()
      */
     @Override
     public String getDateOfOrigin() {
@@ -264,7 +261,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     /** 
      * Sets the name for this document.
      * 
-     * @see org.idch.afed.Facsimile#setName(java.lang.String)
+     * @see org.idch.afed.legacy.BasicFacsimile#setName(java.lang.String)
      */
     @Override
     public void setName(String name) {
@@ -275,7 +272,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
      * Sets a description for this document. In general, this should be plain 
      * text or lightly formated HTML.
      * 
-     * @see org.idch.afed.Facsimile#setDescription(java.lang.String)
+     * @see org.idch.afed.legacy.BasicFacsimile#setDescription(java.lang.String)
      */
     @Override
     public void setDescription(String desc) {
@@ -285,7 +282,7 @@ public class JPAFacsimileDelegate extends PersistentObject<JPAFacsimileDelegate>
     /**
      * Sets the date that this documetn is thought to have been created. 
      * 
-     * @see org.idch.afed.Facsimile#setDateOfOrigin(java.lang.String)
+     * @see org.idch.afed.legacy.BasicFacsimile#setDateOfOrigin(java.lang.String)
      */
     @Override
     public void setDateOfOrigin(String date) {
